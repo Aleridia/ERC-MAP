@@ -352,3 +352,7 @@ pages:
     home:
         title: "Homepage"
         logged_as: "You are logged in as"
+
+requetes:
+    title: "Query interface"
+    list: "Queries"

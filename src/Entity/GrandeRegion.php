@@ -21,7 +21,7 @@ class GrandeRegion extends AbstractEntity
      * @ORM\Column(name="geom", type="geometry", nullable=true, options={"geometry_type"="MULTIPOLYGON", "srid"=4326})
      */
     private $geom;
-
+    
     public function getGeom()
     {
         return $this->geom;

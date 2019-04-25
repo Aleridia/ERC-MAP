@@ -352,3 +352,7 @@ pages:
     home:
         title: "Accueil"
         logged_as: "Vous êtes connecté en tant que"
+
+requetes:
+    title: "Interface de requête"
+    list: "Requêtes"
