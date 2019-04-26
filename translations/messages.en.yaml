@@ -356,3 +356,8 @@ pages:
 requetes:
     title: "Query interface"
     list: "Queries"
+    selection_vide: "-- Please select --"
+    agent_name: "Agent"
+    type_donnee: "Data type"
+    critere: "Requirements"
+    champs_afficher: "Fields to display"

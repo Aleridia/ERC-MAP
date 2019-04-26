@@ -356,3 +356,8 @@ pages:
 requetes:
     title: "Interface de requête"
     list: "Requêtes"
+    selection_vide: "-- Veuillez selectionner --"
+    agent_name: "Agent"
+    type_donnee: "Type de donnée"
+    critere: "Critères"
+    champs_afficher: "Champs à afficher"

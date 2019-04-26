@@ -30,29 +30,36 @@ class RequetesController extends AbstractController {
      }
       
     public function creation_formulaire(){
-            $formulaire = "<div class=\"select_div\">
-            <span class=\"span_box1\">
-            <select id=\"select_box1\" name=\"select_box1\" class=\"select_box1\" onchange=\"secondeBox(this)\">
-                <option value=\"\" selected=\"true\" disabled=\"disabled\">-- Please Select --</option>
-                <option value=\"attestation\"> Attestation </option>
-                <option value=\"agent\"> Agent </option
-                <option value=\"biblio\"> Bibliographie </option>
-                <option value=\"datation\"> Datation </option>
-                <option value=\"element\"> Element </option>
-                <option value=\"localisation\"> Localisation </option>
-                <option value=\"source\"> Source </option>
-            </select>
-            </span>
-            <span class=\"span_box2\">
-            <select name=\"select_box2\" class=\"select_box2\" style=\"visibility:hidden\">
-                <option value=\"\" selected=\"true\" disabled=\"disabled\">-- Please Select --</option>
-            </select>
-            </span>
-            <button type=\"button\" class=\"btn btn-danger\" onclick=\"removeFiltre(this)\">Supprimer</button>
+            $formulaire = "
+            <div class=\"select_div\">
+                <span class=\"span_box1\">
+                    <select name=\"select_box1\" class=\"select_box1\" onchange=\"secondeBox(this)\">
+                        <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option>
+                        <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option>
+                        <option value=\"agent\"> {{ 'agent.name' | trans }} </option>
+                        <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option>
+                        <option value=\"element\"> {{ 'element.name' | trans }} </option>
+                        <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option>
+                        <option value=\"source\"> {{ 'source.name' | trans }} </option>
+                    </select>
+                </span>
+                <span class=\"span_box2\">
+                    <select name=\"select_box2\" class=\"select_box2\" style=\"visibility:hidden\" onchange=\"troisiemeBox(this)\">
+                        <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option>
+                    </select>
+                </span>
+                <span class=\"span_box3\">
+                    <select name=\"select_box3\" class=\"select_box3\" style=\"visibility:hidden\" onchange=\"quatriemeBox(this)\">
+                        <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option>
+                    </select>
+                </span>
+                <span class=\"span_box4\">
+                </span>
+                <button type=\"button\" class=\"btn btn-danger\" onclick=\"removeFiltre(this)\"> {{ 'generic.delete' | trans }} </button>
             </div>
             <br />";
 
-            //Juste le début du formulaire (Les grandes catégories qui ne sont PAS dynamiques)
+            //N'est pas utilisé, mais je le laisse quand même, si jamais j'ai une meilleure solution avec ça au moins j'aurai pas à le réécrire
         return $formulaire;
      }
 }

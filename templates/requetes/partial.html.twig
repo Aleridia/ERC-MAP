@@ -1,0 +1,44 @@
+{% block buttonBarCritere %}
+    <div class="row">
+        <div class="col-12 table-buttons">
+            <button
+                class="btn btn-warning clear-filter-button" onclick="clearFilters()" type="button">
+                {#Bouton pour réinitialiser les filtres #}
+                {{ 'generic.clear_filters'|trans }}
+            </button>
+            <button class="btn btn-primary" onclick="ajouterFiltre()" type="button"> {{ 'generic.add' |trans }}</button> {# Ajouter une requête #}
+            <br/>
+            <br/>
+        </div>
+    </div>
+{% endblock %}
+
+{% block buttonBar %}
+    <div class="row">
+        <div class="col-12 table-buttons">
+            <button
+                class="btn btn-warning clear-filter-button" onclick="clearFilters()" type="button">
+                {#Bouton pour réinitialiser les filtres #}
+                {{ 'generic.clear_filters'|trans }}
+            </button>
+            <button class="btn btn-info" type="button">{{ 'generic.save' |trans }}</button>
+            <button class="btn btn-primary" onclick="ajouterFiltre()" type="button"> {{ 'generic.add' |trans }}</button> {# Ajouter une requête #}
+            <button class="btn btn-success" type="button"> {{ 'generic.search' |trans }} </button>
+            {#Bouton pour lancer la requête #}
+            <br/>
+            <br/>
+        </div>
+    </div>
+{% endblock %}
+
+{% block buttonGeneric %}
+<div class="row">
+        <div class="col-12 table-buttons">
+            <button class="btn btn-info" type="button">{{ 'generic.save' |trans }}</button>
+            <button class="btn btn-success" type="button"> {{ 'generic.search' |trans }} </button>
+            {#Bouton pour lancer la requête #}
+            <br/>
+            <br/>
+        </div>
+    </div>
+{% endblock %}
