@@ -6,8 +6,10 @@
 
 {% block head %}{% endblock %}
 
+
 {% block content %}
-{{ block("buttonGeneric", "requetes/partial.html.twig")}}
+    {{ block("buttonGeneric", "requetes/partial.html.twig")}}
+
     <div id="type_donnee">
         <h3>
             {{ 'requetes.type_donnee' | trans }}
@@ -19,7 +21,7 @@
             {{ 'requetes.critere' | trans }}
         </h3>
         <br/>
-        {{ block("buttonBarCritere", "requetes/partial.html.twig")}}
+        {{ block("buttonBarCritere", "requetes/partial.html.twig") }}
 
         <div
             id="liste_critere">{# {{ formulaire | raw }} #}
@@ -31,14 +33,7 @@
 <h3>
     {{ 'requetes.champs_afficher' | trans }}
 </h3>
-{{ block("buttonGeneric", "requetes/partial.html.twig")}}
-</div>
-
-{% endblock %}
-
-{% block javascripts %}
-{{ parent() }}
-<script type="text/javascript">
+{{ block('buttonGeneric', 'requetes/partial.html.twig')}}</div>{% endblock %}{% block javascripts %}{{ parent() }}<script type="text/javascript">
 // Ajouter le bouton export CSV/PDF
 
 $(document).ready(function () {
@@ -47,7 +42,7 @@ $(document).ready(function () {
     creerTableAfficher();
 });
 
-function creerTableAfficher(){
+function creerTableAfficher() {
     $('#type_donnee').append("<br /> <div class=\"div_type_donnee\"> <select name=\"select_type_donnee\" class=\"select_type_donnee\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </div> <br />");
 }
 
@@ -56,10 +51,33 @@ function clearFilters() {
     ajouterFiltre();
 }
 
-// A changer
-// C'est la première box. Il faut trouver un autre moyen de la mettre pour traduire les noms
-$('#liste_critere').append("<div class=\"select_div\"> <span class=\"span_box1\"> <select name=\"select_box1\" class=\"select_box1\" onchange=\"secondeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </span> <span class=\"span_box2\"> <select name=\"select_box2\" class=\"select_box2\" style=\"visibility:hidden\" onchange=\"troisiemeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box3\"> <select name=\"select_box3\" class=\"select_box3\" style=\"visibility:hidden\" onchange=\"quatriemeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box4\"> </span> <button type=\"button\" class=\"btn_suppr btn btn-danger\" onclick=\"removeFiltre(this)\"> {{ 'generic.delete' | trans }} </button> </div> <br />");
+function sauvegarderRequete() {
+    $(".text_input").each(function () { // Boucle qui permet de passer ce qu'il y a en input dans le "value" afin de le sauvegarder
+        $(this).attr("value", $(this).val());
+    });
+
+    var corpsReq = $("#liste_critere").html(); // On sauvegarde tout le HTML dans la div
+
+    var nomReq = prompt("Entrez un nom pour votre requête"); // On get le nom de la requête
+    if (nomReq == null || nomReq == "") {
+        alert("Vous devez donner un nom à la requête");
+        sauvegarderRequete();
+    }
+    
+}
+
+/* A changer
+C'est la première box. Il faut trouver un autre moyen de la mettre pour traduire les noms */
+var ajoutBox1 = "<div class=\"select_div\"> <span class=\"span_box1\"> <select name=\"select_box1\" class=\"select_box1\" onchange=\"secondeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </span> <span class=\"span_box2\"> <select name=\"select_box2\" class=\"select_box2\" style=\"visibility:hidden\" onchange=\"troisiemeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box3\"> <select name=\"select_box3\" class=\"select_box3\" style=\"visibility:hidden\" onchange=\"quatriemeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box4\"> </span> <button type=\"button\" class=\"btn_suppr btn btn-danger\" onclick=\"removeFiltre(this)\"> {{ 'generic.delete' | trans }} </button>";
+
+/*Variables pour les bouttons AND/OR, voir partial.html.twig
+Je n'ai pas pu invoquer le block twig dans le js*/
+var buttonAndOr = "<div class=\"btn-group btn-group-toggle\" data-toggle=\"buttons\"><label class=\"btn btn-secondary active buttonEt\" checked> <input type=\"radio\" name=\"options\" autocomplete=\"off\"> {{ 'requetes.et' |trans }}</label> <label class=\"btn btn-secondary buttonOu\"> <input type=\"radio\" name=\"options\" autocomplete=\"off\"> {{ 'requetes.ou' |trans }}</label></div> </div> <br />";
+var ajoutBox1EtButtonAndOr = ajoutBox1.concat(buttonAndOr);
+
+$('#liste_critere').append(ajoutBox1EtButtonAndOr);
 var $formulaire_critere = $('#liste_critere').html(); // Variable qui prend le formulaire
+
 function ajouterFiltre() {
     $("#liste_critere").append($formulaire_critere);
     return;
@@ -130,7 +148,7 @@ function remplirQuatriemeBox(valeur, id, box) {
     switch (valeur) {
         case "1":
             if (id != 7) { // estNul
-                $(box).append("<input type=\"text\" required class=\"text_input\">");
+                $(box).append("<input type=\"text\" required class=\"text_input input_req\">"); // Text input classique (String)
             }
             break;
         case "2":
@@ -141,7 +159,7 @@ function remplirQuatriemeBox(valeur, id, box) {
             break;
         case "3":
             if (id != 13) { // estNul
-                $(box).append("<input required id=\"number_input\">"); // On ajoute le input number /!\ Changer le id par une class, getElementByClassName
+                $(box).append("<input required class=\"oui\" id=\"number_input\" class=\"number_input input_req\">"); // Text input uniquement des nombres (int) On ajoute le input number /!\ Changer le id par une class, getElementByClassName
                 setInputFilter(document.getElementById("number_input"), function (value) {
                     return /^-?\d*$/.test(value);
                 }); // Faire en sorte que ça soit par class
@@ -149,7 +167,8 @@ function remplirQuatriemeBox(valeur, id, box) {
             }
     }
 }
-function setInputFilter(textbox, inputFilter) {
+
+function setInputFilter(textbox, inputFilter) { // Fonction qui fait en sorte de n'accepter que les chiffres, positifs ou négatifs
     [
         "input",
         "keydown",

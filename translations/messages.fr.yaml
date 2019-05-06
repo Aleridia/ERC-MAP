@@ -361,3 +361,5 @@ requetes:
     type_donnee: "Type de donnée"
     critere: "Critères"
     champs_afficher: "Champs à afficher"
+    et: "Et"
+    ou: "Ou"

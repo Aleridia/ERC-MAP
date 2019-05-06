@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Traits\EntityId;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RequetesRepository")
@@ -10,9 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Requetes
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
      */
     private $id;
 

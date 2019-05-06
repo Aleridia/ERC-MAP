@@ -361,3 +361,5 @@ requetes:
     type_donnee: "Data type"
     critere: "Requirements"
     champs_afficher: "Fields to display"
+    et: "And"
+    ou: "Or"

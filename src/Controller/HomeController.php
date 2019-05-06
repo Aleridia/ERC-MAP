@@ -67,9 +67,9 @@ class HomeController extends AbstractController
      */
     public function profile(Request $request, TranslatorInterface $translator)
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser(); //Get l'user courant
 
-        $accountForm = $this->get('form.factory')->create(ChercheurType::class, $user);
+        $accountForm = $this->get('form.factory')->create(ChercheurType::class, $user); //Créer le formulaire en envoyant l'user courant
         $accountForm->handleRequest($request);
         $passwordForm = $this->get('form.factory')->create(ChangePasswordType::class, null, [
             'repeat_error' => $translator->trans('chercheur.repeat_password_error')
