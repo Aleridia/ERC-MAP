@@ -10,41 +10,77 @@ use Symfony\Component\Translation\TranslatorInterface;
 use App\Entity\Requetes;
 use App\Entity\VerrouEntite;
 use App\Entity\Chercheur;
+use App\Entity\RequetesFormulaire;
+use Symfony\Component\Form\Extension\Core\Type \ {
+    TextType,
+    ButtonType,
+    EmailType,
+    HiddenType,
+    PasswordType,
+    TextareaType,
+    SubmitType,
+    NumberType,
+    DateType,
+    MoneyType,
+    BirthdayType
+};
 
-class RequetesController extends AbstractController {
+class RequetesController extends AbstractController
+{
 
-	/**
+    /**
      * Page queries
      *
      * @Route("/requetes", name="requetes_list")
      */
-	 public function index()
-     {
-        $user = (string)$this->get('security.token_storage')->getToken()->getUser();
+    public function index(Request $request)
+    {
+        //Formulaire
+        $reqSaveForm = new RequetesFormulaire();
+        $reqSaveForm->setLib("Lib");
+        $reqSaveForm->setCorps("Corps");
+        $form = $this->createFormBuilder($reqSaveForm, ['attr' => ['id' => 'formEnrReq']])
+            ->add('Lib', HiddenType::class)
+            ->add('Corps', HiddenType::class)
+            ->getForm();
+
+        //User
+        $user = (string)$this->get('security.token_storage')->getToken()->getUser(); //On récupère le nom + prénom de l'user en cours
         $idChercheur = $this->getDoctrine()->getRepository(Chercheur::class)->findOneBy(['prenomNom' => $user]);
 
-       /* $reqTest = new Requetes();
-        $reqTest ->setReqLib("Lib");
-        $reqTest -> setReqCorps("Corps");
-        $reqTest -> setIdChercheur($idChercheur); //Il faut lui mettre un objet chercheur que tu récupères avec une requete simple
+        //Traitement formulaire
+        $form->handleRequest($request);
+        $reqSaveCorps = "";
 
-        $em = $this->getDoctrine()->getManager();
-        $em -> persist($reqTest);
-        $em->flush();*/
+        if ($form->isSubmitted() && $form->isValid() ) {
 
-        $idChercheur = $idChercheur->getId();
-        return $this->render('requetes/index.html.twig',[
+            //Doctrine
+            $reqForm = $form->getData();
+            $reqSave = new Requetes();
+            $reqSave->setReqLib($reqForm->getLib());
+            $reqSaveCorps = $reqForm->getCorps();
+            $reqSave->setReqCorps($reqSaveCorps);
+            $reqSave->setIdChercheur($idChercheur); //Il faut lui mettre un objet chercheur que tu récupères avec une requete simple
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($reqSave);
+            $em->flush();
+            
+            $reqSaveCorps =  json_encode($reqSaveCorps);
+        }
+
+
+        return $this->render('requetes/index.html.twig', [
             'controller_name' => 'RequetesController',
-            'formulaire' => $this->creation_formulaire(),
-            'idChercheur' => $idChercheur,
-            'user' => $user,
+            'reqSaveCorps' => $reqSaveCorps,
+            'form' => $form->createView(),
             'breadcrumbs'   => [
                 ['label' => 'nav.home', 'url' => $this->generateUrl('home')],
                 ['label' => 'requetes.list']
             ]
-         ]);
-     }
-    
+        ]);
+    }
+
+    /*
     //N'est pas utilisé, mais je le laisse quand même, si jamais j'ai une meilleure solution avec ça au moins j'aurai pas à le réécrire
     public function creation_formulaire(){
             $formulaire = "
@@ -76,9 +112,5 @@ class RequetesController extends AbstractController {
             </div>
             <br />";
         return $formulaire;
-     }
+     }*/
 }
-
-
-
-?>

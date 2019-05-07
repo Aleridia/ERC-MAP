@@ -9,540 +9,572 @@
 
 {% block content %}
     {{ block("buttonGeneric", "requetes/partial.html.twig")}}
-
-    <div id="type_donnee">
-        <h3>
-            {{ 'requetes.type_donnee' | trans }}
-        </h3>
-    </div>
-
-    <div id="criteres">
-        <h3>
-            {{ 'requetes.critere' | trans }}
-        </h3>
-        <br/>
-        {{ block("buttonBarCritere", "requetes/partial.html.twig") }}
-
-        <div
-            id="liste_critere">{# {{ formulaire | raw }} #}
-        </div>
-        {{ block("buttonBarCritere", "requetes/partial.html.twig") }}
-    </div>
-
-</div="champ_affiche">
-<h3>
-    {{ 'requetes.champs_afficher' | trans }}
-</h3>
-{{ block('buttonGeneric', 'requetes/partial.html.twig')}}</div>{% endblock %}{% block javascripts %}{{ parent() }}<script type="text/javascript">
-// Ajouter le bouton export CSV/PDF
-
-$(document).ready(function () {
-    // Le document ready
-    // Peut-être mettre directement le text dans les <option> au moins j'aurai la traduction
-    creerTableAfficher();
-});
-
-function creerTableAfficher() {
-    $('#type_donnee').append("<br /> <div class=\"div_type_donnee\"> <select name=\"select_type_donnee\" class=\"select_type_donnee\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </div> <br />");
-}
-
-function clearFilters() {
-    $('#liste_critere').empty();
-    ajouterFiltre();
-}
-
-function sauvegarderRequete() {
-    $(".text_input").each(function () { // Boucle qui permet de passer ce qu'il y a en input dans le "value" afin de le sauvegarder
-        $(this).attr("value", $(this).val());
-    });
-
-    var corpsReq = $("#liste_critere").html(); // On sauvegarde tout le HTML dans la div
-
-    var nomReq = prompt("Entrez un nom pour votre requête"); // On get le nom de la requête
-    if (nomReq == null || nomReq == "") {
-        alert("Vous devez donner un nom à la requête");
-        sauvegarderRequete();
-    }
     
-}
+    {{ form(form) }}
+    <div id="general_req">
+        <div id="type_donnee">
+            <h3>
+                {{ 'requetes.type_donnee' | trans }}
+            </h3>
+        </div>
 
-/* A changer
-C'est la première box. Il faut trouver un autre moyen de la mettre pour traduire les noms */
-var ajoutBox1 = "<div class=\"select_div\"> <span class=\"span_box1\"> <select name=\"select_box1\" class=\"select_box1\" onchange=\"secondeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </span> <span class=\"span_box2\"> <select name=\"select_box2\" class=\"select_box2\" style=\"visibility:hidden\" onchange=\"troisiemeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box3\"> <select name=\"select_box3\" class=\"select_box3\" style=\"visibility:hidden\" onchange=\"quatriemeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box4\"> </span> <button type=\"button\" class=\"btn_suppr btn btn-danger\" onclick=\"removeFiltre(this)\"> {{ 'generic.delete' | trans }} </button>";
+        <div id="criteres">
+            <h3>
+                {{ 'requetes.critere' | trans }}
+            </h3>
+            <br/>
+            {{ block("buttonBarCritere", "requetes/partial.html.twig") }}
 
-/*Variables pour les bouttons AND/OR, voir partial.html.twig
-Je n'ai pas pu invoquer le block twig dans le js*/
-var buttonAndOr = "<div class=\"btn-group btn-group-toggle\" data-toggle=\"buttons\"><label class=\"btn btn-secondary active buttonEt\" checked> <input type=\"radio\" name=\"options\" autocomplete=\"off\"> {{ 'requetes.et' |trans }}</label> <label class=\"btn btn-secondary buttonOu\"> <input type=\"radio\" name=\"options\" autocomplete=\"off\"> {{ 'requetes.ou' |trans }}</label></div> </div> <br />";
-var ajoutBox1EtButtonAndOr = ajoutBox1.concat(buttonAndOr);
+            <div id="liste_critere">
+            </div>
+            {{ block("buttonBarCritere", "requetes/partial.html.twig") }}
+        </div>
 
-$('#liste_critere').append(ajoutBox1EtButtonAndOr);
-var $formulaire_critere = $('#liste_critere').html(); // Variable qui prend le formulaire
+        <div="champ_affiche">
 
-function ajouterFiltre() {
-    $("#liste_critere").append($formulaire_critere);
-    return;
-}
+            <h3>
+                {{ 'requetes.champs_afficher' | trans }}
+            </h3>
 
-function removeFiltre(currentElement) { // Par rapport au bouton supprimer
-    $(currentElement).parent().next().remove(); // Le br
-    $(currentElement).parent().remove(); // La div
-    return;
-}
+             {{ block('buttonGeneric', 'requetes/partial.html.twig')}}
+        
+        </div>
+    </div>
+    {% endblock %}
+    
+    {% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    // Ajouter le bouton export CSV/PDF
 
-function secondeBox(currentElement) { // Pour le onchange de la première box
-    var valeurSelect = $(currentElement).children("option:selected").val()
-    var box2 = $(currentElement).parent().next().children();
-    var box3 = $(box2).parent().next().children(); // On doit aussi vider la 3ème box + la mettre en hidden
-    $(box2).empty(); // Il faut vider le HTML de la seconde box sinon ça ajoute
-    box3.css("visibility", "hidden"); // On le chache, car il doit obligatoirement saisir la seconde box avant de pouvoir toucher à la 3ème
-    var box4 = $(box3).parent().next(); // On doit aussi vider la 4ème box (Input text, liste ou input number)
-    $(box4).empty();
-    remplirSecondeBox(valeurSelect, box2);
-    return;
-}
-
-function remplirSecondeBox(valeur, box) { // Afficher les <option> par rapport à la première box, sur la seconde box
-    $(box).append("<option value=\"\" selected=\"true\" disabled=\"disabled\">-- Please Select --</option>");
-    $.each(tabObjets, function (j, obj) { // On parcourt le tableau JSON
-        if (j == valeur) { // On vérifie que ça corresponde bien à ce qu'il y a dans la box 1
-            for (var i = 0; i < obj.length; i++) { // Boucle for pour afficher tous les objets
-                $(box).append("<option value=\"" + valeur + "\" label=\"" + i + "\">" + obj[i].nom + " </option>"); // value="valeur", label="i". J'envoie ça pour pouvoir récupérer les valeurs dans le tabObjetsaprès
-            }
-        }
-    })
-    box.css("visibility", "visible"); // On affiche le second select
-    return;
-}
-
-function troisiemeBox(currentElement) { // Pour le onchange de la seconde box
-    var valeur = $(currentElement).children("option:selected").val(); // le i de tab['valeur'][i]
-    var i = $(currentElement).children("option:selected").attr('label'); // le valeur
-    var box3 = $(currentElement).parent().next().children();
-    $(box3).empty(); // Il faut vider le HTML de la seconde box sinon ça ajoute
-    remplirTroisiemeBox(tabObjets[valeur][i].type, box3);
-    return;
-}
-
-function remplirTroisiemeBox(valeur, box) {
-    $(box).append("<option value=\"\" selected=\"true\" disabled=\"disabled\">-- Please Select --</option>");
-    $.each(tabChoix, function (j, obj) { // On parcourt le tableau JSON
-        if (j == valeur) { // On vérifie que ça corresponde bien à ce qu'il y a dans la box 1
-            for (var i = 0; i < obj.length; i++) { // Boucle for pour afficher tous les objets
-                $(box).append("<option value=\"" + valeur + "\" label=\"" + obj[i].id + "\">" + obj[i].nom + " </option>"); // <option value="valeur"> obj[i].nom </option>
-            }
-        }
-    })
-    box.css("visibility", "visible"); // On affiche le second select
-    return;
-}
-
-function quatriemeBox(currentElement) {
-    var valeur = $(currentElement).children("option:selected").val();
-    var idTabChoix = $(currentElement).children("option:selected").attr('label');
-    var box4 = $(currentElement).parent().next();
-    remplirQuatriemeBox(valeur, idTabChoix, box4);
-}
-
-function remplirQuatriemeBox(valeur, id, box) {
-    $(box).empty();
-    switch (valeur) {
-        case "1":
-            if (id != 7) { // estNul
-                $(box).append("<input type=\"text\" required class=\"text_input input_req\">"); // Text input classique (String)
-            }
-            break;
-        case "2":
-            $(box).append("<select name=\"select_box4\" class=\"select_box4\"> </select>"); // On ajout le select
-            var selectBox = $(box).children();
-            // Le select_box4
-            // Ajouter les <option> avec de l'AJAAAAAAAAAAAAAX
-            break;
-        case "3":
-            if (id != 13) { // estNul
-                $(box).append("<input required class=\"oui\" id=\"number_input\" class=\"number_input input_req\">"); // Text input uniquement des nombres (int) On ajoute le input number /!\ Changer le id par une class, getElementByClassName
-                setInputFilter(document.getElementById("number_input"), function (value) {
-                    return /^-?\d*$/.test(value);
-                }); // Faire en sorte que ça soit par class
-                break;
-            }
-    }
-}
-
-function setInputFilter(textbox, inputFilter) { // Fonction qui fait en sorte de n'accepter que les chiffres, positifs ou négatifs
-    [
-        "input",
-        "keydown",
-        "keyup",
-        "mousedown",
-        "mouseup",
-        "select",
-        "contextmenu",
-        "drop"
-    ].forEach(function (event) {
-        textbox.addEventListener(event, function () {
-            if (inputFilter(this.value)) {
-                this.oldValue = this.value;
-                this.oldSelectionStart = this.selectionStart;
-                this.oldSelectionEnd = this.selectionEnd;
-            } else if (this.hasOwnProperty("oldValue")) {
-                this.value = this.oldValue;
-                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-            }
-        });
+    $(document).ready(function () {
+        // Le document ready
+        // Peut-être mettre directement le text dans les <option> au moins j'aurai la traduction
+        creerTableAfficherEtCritere();
     });
-}
 
-// Type : Booléen(0), String/Text(1), Liste(2), Number(3),Lien existe(4) -> Si le lien existe entre telle et telle table, en soi juste une jointure
-// Tableau pour les box3
-var tabChoix = {
-    0: [
-        {
-            "nom": "Est vrai",
-            "id": 0
-        }, {
-            "nom": "Est faux",
-            "id": 1
-        }, {
-            "nom": "Est nul",
-            "id": 2
+    /* A changer
+C'est la première box. Il faut trouver un autre moyen de la mettre pour traduire les noms */
+    var ajoutBox1 = "<div class=\"select_div\"> <span class=\"span_box1\"> <select name=\"select_box1\" class=\"select_box1\" onchange=\"secondeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </span> <span class=\"span_box2\"> <select name=\"select_box2\" class=\"select_box2\" style=\"visibility:hidden\" onchange=\"troisiemeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box3\"> <select name=\"select_box3\" class=\"select_box3\" style=\"visibility:hidden\" onchange=\"quatriemeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box4\"> </span> <button type=\"button\" class=\"btn_suppr btn btn-danger\" onclick=\"removeFiltre(this)\"> {{ 'generic.delete' | trans }} </button>";
+
+    /*Variables pour les bouttons AND/OR, voir partial.html.twig
+Je n'ai pas pu invoquer le block twig dans le js*/
+    var buttonAndOr = "<div class=\"btn-group btn-group-toggle\" data-toggle=\"buttons\"><label class=\"btn btn-secondary active buttonEt\" checked> <input type=\"radio\" name=\"options\" autocomplete=\"off\"> {{ 'requetes.et' |trans }}</label> <label class=\"btn btn-secondary buttonOu\"> <input type=\"radio\" name=\"options\" autocomplete=\"off\"> {{ 'requetes.ou' |trans }}</label></div> </div> <br />";
+    var formulaire_critere = ajoutBox1.concat(buttonAndOr); // Variable qui prend  le formulaire.
+
+    function creerTableAfficherEtCritere() {
+        var reqSaveCorps = '{{ reqSaveCorps}}';
+        if(reqSaveCorps == "" ){
+            //Table afficher
+            $('#type_donnee').append("<br /> <div class=\"div_type_donnee\"> <select name=\"select_type_donnee\" class=\"select_type_donnee\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </div> <br />");
+            //Table critères
+            $('#liste_critere').append(formulaire_critere);
         }
-    ],
-    1: [
+        else
         {
-            "nom": "Contient",
-            "id": 3
-        }, {
-            "nom": "Ne contient pas",
-            "id": 4
-        }, {
-            "nom": "Commence par",
-            "id": 5
-        }, {
-            "nom": "Finit par",
-            "id": 6
-        }, {
-            "nom": "Est vide",
-            "id": 7
-        },
-    ],
-    2: [
-        {
-            "nom": "Est égal à",
-            "id": 8
-        }, {
-            "nom": "Est différent de",
-            "id": 9
+            var tmp = '{{ reqSaveCorps | raw}}'.substr(1,'{{ reqSaveCorps | raw}}'.length-2); //On enlève les quotes "" du JSON, pour ne pas qu'elles s'affichent
+            $("#general_req").empty();
+            $("#general_req").html(tmp);
         }
-    ],
-    3: [
-        {
-            "nom": "Plus grand que",
-            "id": 10
-        }, {
-            "nom": "Plus petit que",
-            "id": 11
-        }, {
-            "nom": "Égal à",
-            "id": 12
-        }, {
-            "nom": "Est nul",
-            "id": 13
+    }
+
+    function clearFilters() {
+        $('#liste_critere').empty();
+        ajouterFiltre();
+    }
+
+    function sauvegarderRequete() {
+        $(".input_req").each(function () { // Boucle qui permet de passer ce qu'il y a en input dans le "value" afin de le sauvegarder
+            $(this).attr("value", $(this).val());
+        });
+
+        var corpsReq = $("#general_req").html(); // On sauvegarde tout le HTML dans la div
+
+        var nomReq = prompt("Entrez un nom pour votre requête"); // On get le nom de la requête
+        if (nomReq == null || nomReq == "") {
+            alert("Vous devez donner un nom à la requête");
+            return;
         }
-    ]
-}
+        // On met le tout dans les champs hidden
+        $("#form_Lib").attr("value", nomReq); 
+        $("#form_Corps").attr("value", corpsReq);
+        $("#formEnrReq").submit();
+    }
 
-// Type : Booléen(0), String/Text(1), Liste(2), Number(3),Lien existe(4) -> Si le lien existe entre telle et telle table, en soi juste une jointure
-var tabObjets = {
-    "attestation": [
-        {
-            "nom": "{{ 'attestation.fields.prose' |trans }}",
-            "type": 0,
-            "nomBDD": "prose",
-            "table": "attestation"
-        }, {
-            "nom": "{{ 'attestation.fields.poesie' |trans }}",
-            "type": 0,
-            "nomBDD": "poesie",
-            "table": "attestation"
-        }, {
-            "nom": "{{ 'attestation.fields.translitteration' |trans }}",
-            "type": 1,
-            "nomBDD": "translitteration",
-            "table": "attestation"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_fr",
-            "table": "attestation"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_en",
-            "table": "attestation"
-        }, {
-            "nom": "{{ 'attestation.fields.etat_fiche' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "etat_fiche"
-        }, {
-            "nom": "{{ 'attestation.fields.categorie_occasion' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "categorie_occasion"
-        }, {
-            "nom": "{{ 'attestation.fields.occasion' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "occasion"
-        }, {
-            "nom": "{{ 'attestation.fields.categorie_materiel' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "categorie_materiel"
-        }, {
-            "nom": "{{ 'attestation.fields.materiel' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "materiel"
+    function chargerRequete(){
+        
+    }
+
+    function ajouterFiltre() {
+        $("#liste_critere").append(formulaire_critere);
+        return;
+    }
+
+    function removeFiltre(currentElement) { // Par rapport au bouton supprimer
+        $(currentElement).parent().next().remove(); // Le br
+        $(currentElement).parent().remove(); // La div
+        return;
+    }
+
+    function secondeBox(currentElement) { // Pour le onchange de la première box
+        var valeurSelect = $(currentElement).children("option:selected").val()
+        var box2 = $(currentElement).parent().next().children();
+        var box3 = $(box2).parent().next().children(); // On doit aussi vider la 3ème box + la mettre en hidden
+        $(box2).empty(); // Il faut vider le HTML de la seconde box sinon ça ajoute
+        box3.css("visibility", "hidden"); // On le chache, car il doit obligatoirement saisir la seconde box avant de pouvoir toucher à la 3ème
+        var box4 = $(box3).parent().next(); // On doit aussi vider la 4ème box (Input text, liste ou input number)
+        $(box4).empty();
+        remplirSecondeBox(valeurSelect, box2);
+        return;
+    }
+
+    function remplirSecondeBox(valeur, box) { // Afficher les <option> par rapport à la première box, sur la seconde box
+        $(box).append("<option value=\"\" selected=\"true\" disabled=\"disabled\">-- Please Select --</option>");
+        $.each(tabObjets, function (j, obj) { // On parcourt le tableau JSON
+            if (j == valeur) { // On vérifie que ça corresponde bien à ce qu'il y a dans la box 1
+                for (var i = 0; i < obj.length; i++) { // Boucle for pour afficher tous les objets
+                    $(box).append("<option value=\"" + valeur + "\" label=\"" + i + "\">" + obj[i].nom + " </option>"); // value="valeur", label="i". J'envoie ça pour pouvoir récupérer les valeurs dans le tabObjetsaprès
+                }
+            }
+        })
+        box.css("visibility", "visible"); // On affiche le second select
+        return;
+    }
+
+    function troisiemeBox(currentElement) { // Pour le onchange de la seconde box
+        var valeur = $(currentElement).children("option:selected").val(); // le i de tab['valeur'][i]
+        var i = $(currentElement).children("option:selected").attr('label'); // le valeur
+        var box3 = $(currentElement).parent().next().children();
+        $(box3).empty(); // Il faut vider le HTML de la seconde box sinon ça ajoute
+        remplirTroisiemeBox(tabObjets[valeur][i].type, box3);
+        return;
+    }
+
+    function remplirTroisiemeBox(valeur, box) {
+        $(box).append("<option value=\"\" selected=\"true\" disabled=\"disabled\">-- Please Select --</option>");
+        $.each(tabChoix, function (j, obj) { // On parcourt le tableau JSON
+            if (j == valeur) { // On vérifie que ça corresponde bien à ce qu'il y a dans la box 1
+                for (var i = 0; i < obj.length; i++) { // Boucle for pour afficher tous les objets
+                    $(box).append("<option value=\"" + valeur + "\" label=\"" + obj[i].id + "\">" + obj[i].nom + " </option>"); // <option value="valeur"> obj[i].nom </option>
+                }
+            }
+        })
+        box.css("visibility", "visible"); // On affiche le second select
+        return;
+    }
+
+    function quatriemeBox(currentElement) {
+        var valeur = $(currentElement).children("option:selected").val();
+        var idTabChoix = $(currentElement).children("option:selected").attr('label');
+        var box4 = $(currentElement).parent().next();
+        remplirQuatriemeBox(valeur, idTabChoix, box4);
+    }
+
+    function remplirQuatriemeBox(valeur, id, box) {
+        $(box).empty();
+        switch (valeur) {
+            case "1":
+                if (id != 7) { // estNul
+                    $(box).append("<input type=\"text\" required class=\"text_input input_req\">"); // Text input classique (String)
+                }
+                break;
+            case "2":
+                $(box).append("<select name=\"select_box4\" class=\"select_box4\"> </select>"); // On ajout le select
+                var selectBox = $(box).children();// Le select_box4
+
+                // Ajouter les <option> avec de l'AJAAAAAAAAAAAAAX
+                break;
+            case "3":
+                if (id != 13) { // estNul
+                    $(box).append("<input required id=\"number_input\" class=\"number_input input_req\">"); // Text input avec uniquement des nombres (int)
+                    var numInp =  document.getElementsByClassName('number_input'); //Je récupère tous les number_input
+                    for(var i = 0; i< numInp.length; i++){
+                        setInputFilter(numInp[i], function (value) { //Je les affecte à la fonction
+                             return /^-?\d*$/.test(value);
+                        });
+                    }
+                    break;
+                }
         }
-    ],
+    }
 
-    "agent": [
-        {
-            "nom": "{{ 'agent.fields.designation' |trans }}",
-            "type": 1,
-            "nomBDD": "designation",
-            "table": "agent"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_fr",
-            "table": "agent"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_en",
-            "table": "agent"
-        }, {
-            "nom": "{{ 'agent.fields.agentivite' |trans }}",
-            "type": 1,
-            "nomBDD": "nom_fr",
-            "table": "agentivite"
-        }, {
-            "nom": "{{ 'agent.fields.nature' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "nature"
-        }, {
-            "nom": "{{ 'agent.fields.genre' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "genre"
-        }, {
-            "nom": "{{ 'agent.fields.statut_affiche' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "statut_affiche"
-        }, {
-            "nom": "{{ 'agent.fields.activite' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "activite_agent"
-        }
-    ],
+    function setInputFilter(textbox, inputFilter) { // Fonction qui fait en sorte de n'accepter que les chiffres, positifs ou négatifs
+        [
+            "input",
+            "keydown",
+            "keyup",
+            "mousedown",
+            "mouseup",
+            "select",
+            "contextmenu",
+            "drop"
+        ].forEach(function (event) {
+            textbox.addEventListener(event, function () {
+                if (inputFilter(this.value)) {
+                    this.oldValue = this.value;
+                    this.oldSelectionStart = this.selectionStart;
+                    this.oldSelectionEnd = this.selectionEnd;
+                } else if (this.hasOwnProperty("oldValue")) {
+                    this.value = this.oldValue;
+                    this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                }
+            });
+        });
+    }
 
-    "localisation": [
-        {
-            "nom": "{{ 'generic.fields.localisation_reelle' |trans }}",
-            "type": 0,
-            "nomBDD": "reel",
-            "table": "localisation"
-        }, {
-            "nom": "{{ 'localisation.fields.nom_ville' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_ville",
-            "table": "localisation"
-        }, {
-            "nom": "{{ 'localisation.fields.nom_site' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_site",
-            "table": "localisation"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_fr",
-            "table": "localisation"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_en",
-            "table": "localisation"
-        }, {
-            "nom": "{{ 'localisation.fields.entite_politique' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "entite_politique"
-        }, {
-            "nom": "{{ 'localisation.fields.grande_region' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "grande_region"
-        }, {
-            "nom": "{{ 'localisation.fields.sous_region' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "sous_region"
-        }, {
-            "nom": "{{ 'localisation.fields.topographie' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "q_topographie"
-        }, {
-            "nom": "{{ 'localisation.fields.fonction' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "q_fonction"
-        },
-    ],
+    // Type : Booléen(0), String/Text(1), Liste(2), Number(3),Lien existe(4) -> Si le lien existe entre telle et telle table, en soi juste une jointure
+    // Tableau pour les box3
+    var tabChoix = {
+        0: [
+            {
+                "nom": "Est vrai",
+                "id": 0
+            }, {
+                "nom": "Est faux",
+                "id": 1
+            }, {
+                "nom": "Est nul",
+                "id": 2
+            }
+        ],
+        1: [
+            {
+                "nom": "Contient",
+                "id": 3
+            }, {
+                "nom": "Ne contient pas",
+                "id": 4
+            }, {
+                "nom": "Commence par",
+                "id": 5
+            }, {
+                "nom": "Finit par",
+                "id": 6
+            }, {
+                "nom": "Est vide",
+                "id": 7
+            },
+        ],
+        2: [
+            {
+                "nom": "Est égal à",
+                "id": 8
+            }, {
+                "nom": "Est différent de",
+                "id": 9
+            }
+        ],
+        3: [
+            {
+                "nom": "Plus grand que",
+                "id": 10
+            }, {
+                "nom": "Plus petit que",
+                "id": 11
+            }, {
+                "nom": "Égal à",
+                "id": 12
+            }, {
+                "nom": "Est nul",
+                "id": 13
+            }
+        ]
+    }
 
-    "element": [
-        {
-            "nom": "{{ 'element.fields.etat_absolu' |trans }}",
-            "type": 1,
-            "nomBDD": "etat_absolu",
-            "table": "element"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_fr",
-            "table": "element"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_en",
-            "table": "element"
-        }, {
-            "nom": "{{ 'element.fields.etat_morphologique' |trans }}",
-            "type": 2,
-            "nomBDD": "commentaire_en",
-            "table": "contient_element"
-        }, {
-            "nom": "{{ 'element.fields.beta_code' |trans }}",
-            "type": 1,
-            "nomBDD": "beta_code",
-            "table": "element"
-        }, {
-            "nom": "{{ 'element.fields.suffixe' |trans }}",
-            "type": 0,
-            "nomBDD": "suffixe",
-            "table": "contient_element"
-        }, {
-            "nom": "{{ 'element.fields.genre' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "genre_element"
-        }, {
-            "nom": "{{ 'element.fields.nombre' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "nombre_element"
-        }, {
-            "nom": "{{ 'element.fields.reference_element' |trans }}",
-            "type": 1,
-            "nomBDD": "reference_element",
-            "table": "element_biblio"
-        },
-    ],
+    // Type : Booléen(0), String/Text(1), Liste(2), Number(3),Lien existe(4) -> Si le lien existe entre telle et telle table, en soi juste une jointure
+    var tabObjets = {
+        "attestation": [
+            {
+                "nom": "{{ 'attestation.fields.prose' |trans }}",
+                "type": 0,
+                "nomBDD": "prose",
+                "table": "attestation"
+            }, {
+                "nom": "{{ 'attestation.fields.poesie' |trans }}",
+                "type": 0,
+                "nomBDD": "poesie",
+                "table": "attestation"
+            }, {
+                "nom": "{{ 'attestation.fields.translitteration' |trans }}",
+                "type": 1,
+                "nomBDD": "translitteration",
+                "table": "attestation"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_fr",
+                "table": "attestation"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_en",
+                "table": "attestation"
+            }, {
+                "nom": "{{ 'attestation.fields.etat_fiche' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "etat_fiche"
+            }, {
+                "nom": "{{ 'attestation.fields.categorie_occasion' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "categorie_occasion"
+            }, {
+                "nom": "{{ 'attestation.fields.occasion' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "occasion"
+            }, {
+                "nom": "{{ 'attestation.fields.categorie_materiel' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "categorie_materiel"
+            }, {
+                "nom": "{{ 'attestation.fields.materiel' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "materiel"
+            }
+        ],
 
-    "source": [
-        {
-            "nom": "{{ 'source.fields.categorie_source' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "categorie_source"
-        }, {
-            "nom": "{{ 'source.fields.type_source' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "type_source"
-        }, {
-            "nom": "{{ 'source.fields.langues' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "langue"
-        }, {
-            "nom": "{{ 'source.fields.titre' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "titre"
-        }, {
-            "nom": "{{ 'source.fields.auteurs' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "auteur"
-        }, {
-            "nom": "{{ 'source.fields.categorie_materiau' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "categorie_materiau"
-        }, {
-            "nom": "{{ 'source.fields.materiau' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "materiau"
-        }, {
-            "nom": "{{ 'source.fields.support' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "type_support"
-        }, {
-            "nom": "{{ 'source.fields.categorie_support' |trans }}",
-            "type": 2,
-            "nomBDD": "nom_fr",
-            "table": "categorie_support"
-        }, {
-            "nom": "{{ 'source.fields.iconographie' |trans }}",
-            "type": 0,
-            "nomBDD": "iconographie",
-            "table": "source"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_fr",
-            "table": "source"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_en",
-            "table": "source"
-        },
-    ],
-    "datation": [
-        {
-            "nom": "{{ 'datation.fields.post_quem' |trans }}",
-            "type": 3,
-            "nomBDD": "post_quem",
-            "table": "datation"
-        }, {
-            "nom": "{{ 'datation.fields.ante_quem' |trans }}",
-            "type": 3,
-            "nomBDD": "ante_quem",
-            "table": "datation"
-        }, {
-            "nom": "{{ 'datation.fields.post_quem' |trans }}",
-            "type": 3,
-            "nomBDD": "post_quem",
-            "table": "datation"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_fr",
-            "table": "datation"
-        }, {
-            "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
-            "type": 1,
-            "nomBDD": "commentaire_en",
-            "table": "datation"
-        },
-    ]
-}</script>{% endblock %}
+        "agent": [
+            {
+                "nom": "{{ 'agent.fields.designation' |trans }}",
+                "type": 1,
+                "nomBDD": "designation",
+                "table": "agent"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_fr",
+                "table": "agent"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_en",
+                "table": "agent"
+            }, {
+                "nom": "{{ 'agent.fields.agentivite' |trans }}",
+                "type": 1,
+                "nomBDD": "nom_fr",
+                "table": "agentivite"
+            }, {
+                "nom": "{{ 'agent.fields.nature' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "nature"
+            }, {
+                "nom": "{{ 'agent.fields.genre' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "genre"
+            }, {
+                "nom": "{{ 'agent.fields.statut_affiche' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "statut_affiche"
+            }, {
+                "nom": "{{ 'agent.fields.activite' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "activite_agent"
+            }
+        ],
+
+        "localisation": [
+            {
+                "nom": "{{ 'generic.fields.localisation_reelle' |trans }}",
+                "type": 0,
+                "nomBDD": "reel",
+                "table": "localisation"
+            }, {
+                "nom": "{{ 'localisation.fields.nom_ville' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_ville",
+                "table": "localisation"
+            }, {
+                "nom": "{{ 'localisation.fields.nom_site' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_site",
+                "table": "localisation"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_fr",
+                "table": "localisation"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_en",
+                "table": "localisation"
+            }, {
+                "nom": "{{ 'localisation.fields.entite_politique' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "entite_politique"
+            }, {
+                "nom": "{{ 'localisation.fields.grande_region' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "grande_region"
+            }, {
+                "nom": "{{ 'localisation.fields.sous_region' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "sous_region"
+            }, {
+                "nom": "{{ 'localisation.fields.topographie' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "q_topographie"
+            }, {
+                "nom": "{{ 'localisation.fields.fonction' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "q_fonction"
+            },
+        ],
+
+        "element": [
+            {
+                "nom": "{{ 'element.fields.etat_absolu' |trans }}",
+                "type": 1,
+                "nomBDD": "etat_absolu",
+                "table": "element"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_fr",
+                "table": "element"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_en",
+                "table": "element"
+            }, {
+                "nom": "{{ 'element.fields.etat_morphologique' |trans }}",
+                "type": 2,
+                "nomBDD": "commentaire_en",
+                "table": "contient_element"
+            }, {
+                "nom": "{{ 'element.fields.beta_code' |trans }}",
+                "type": 1,
+                "nomBDD": "beta_code",
+                "table": "element"
+            }, {
+                "nom": "{{ 'element.fields.suffixe' |trans }}",
+                "type": 0,
+                "nomBDD": "suffixe",
+                "table": "contient_element"
+            }, {
+                "nom": "{{ 'element.fields.genre' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "genre_element"
+            }, {
+                "nom": "{{ 'element.fields.nombre' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "nombre_element"
+            }, {
+                "nom": "{{ 'element.fields.reference_element' |trans }}",
+                "type": 1,
+                "nomBDD": "reference_element",
+                "table": "element_biblio"
+            },
+        ],
+
+        "source": [
+            {
+                "nom": "{{ 'source.fields.categorie_source' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "categorie_source"
+            }, {
+                "nom": "{{ 'source.fields.type_source' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "type_source"
+            }, {
+                "nom": "{{ 'source.fields.langues' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "langue"
+            }, {
+                "nom": "{{ 'source.fields.titre' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "titre"
+            }, {
+                "nom": "{{ 'source.fields.auteurs' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "auteur"
+            }, {
+                "nom": "{{ 'source.fields.categorie_materiau' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "categorie_materiau"
+            }, {
+                "nom": "{{ 'source.fields.materiau' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "materiau"
+            }, {
+                "nom": "{{ 'source.fields.support' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "type_support"
+            }, {
+                "nom": "{{ 'source.fields.categorie_support' |trans }}",
+                "type": 2,
+                "nomBDD": "nom_fr",
+                "table": "categorie_support"
+            }, {
+                "nom": "{{ 'source.fields.iconographie' |trans }}",
+                "type": 0,
+                "nomBDD": "iconographie",
+                "table": "source"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_fr",
+                "table": "source"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_en",
+                "table": "source"
+            },
+        ],
+        "datation": [
+            {
+                "nom": "{{ 'datation.fields.post_quem' |trans }}",
+                "type": 3,
+                "nomBDD": "post_quem",
+                "table": "datation"
+            }, {
+                "nom": "{{ 'datation.fields.ante_quem' |trans }}",
+                "type": 3,
+                "nomBDD": "ante_quem",
+                "table": "datation"
+            }, {
+                "nom": "{{ 'datation.fields.post_quem' |trans }}",
+                "type": 3,
+                "nomBDD": "post_quem",
+                "table": "datation"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_fr",
+                "table": "datation"
+            }, {
+                "nom": "{{ 'generic.fields.commentaire_en' |trans }}",
+                "type": 1,
+                "nomBDD": "commentaire_en",
+                "table": "datation"
+            },
+        ]
+    }
+
+</script>{% endblock %}
