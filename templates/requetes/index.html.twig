@@ -17,19 +17,15 @@
                 {{ 'requetes.type_donnee' | trans }}
             </h3>
         </div>
-
         <div id="criteres">
             <h3>
                 {{ 'requetes.critere' | trans }}
             </h3>
             <br/>
             {{ block("buttonBarCritere", "requetes/partial.html.twig") }}
-
             <div id="liste_critere">
             </div>
             {{ block("buttonBarCritere", "requetes/partial.html.twig") }}
-        </div>
-
         <div="champ_affiche">
 
             <h3>
@@ -55,18 +51,18 @@
 
     /* A changer
 C'est la première box. Il faut trouver un autre moyen de la mettre pour traduire les noms */
-    var ajoutBox1 = "<div class=\"select_div\"> <span class=\"span_box1\"> <select name=\"select_box1\" class=\"select_box1\" onchange=\"secondeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </span> <span class=\"span_box2\"> <select name=\"select_box2\" class=\"select_box2\" style=\"visibility:hidden\" onchange=\"troisiemeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box3\"> <select name=\"select_box3\" class=\"select_box3\" style=\"visibility:hidden\" onchange=\"quatriemeBox(this)\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box4\"> </span> <button type=\"button\" class=\"btn_suppr btn btn-danger\" onclick=\"removeFiltre(this)\"> {{ 'generic.delete' | trans }} </button>";
+    var ajoutBox1 = "<div class=\"select_div\"> <span class=\"span_box1\"> <select name=\"select_box1\" class=\"select_box1\" onchange=\"secondeBox(this)\"> <option value=\"\" selected=\"selected\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </span> <span class=\"span_box2\"> <select name=\"select_box2\" class=\"select_box2\" style=\"visibility:hidden\" onchange=\"troisiemeBox(this)\"> <option value=\"\" selected=\"selected\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select> </span> <span class=\"span_box3\"> <select name=\"select_box3\" class=\"select_box3\" style=\"visibility:hidden\" onchange=\"quatriemeBox(this)\"> <option value=\"\" selected=\"selected\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> </select></span> <span class=\"span_box4\"> </span> <button type=\"button\" class=\"btn_suppr btn btn-danger\" onclick=\"removeFiltre(this)\"> {{ 'generic.delete' | trans }} </button>";
 
     /*Variables pour les bouttons AND/OR, voir partial.html.twig
 Je n'ai pas pu invoquer le block twig dans le js*/
     var buttonAndOr = "<div class=\"btn-group btn-group-toggle\" data-toggle=\"buttons\"><label class=\"btn btn-secondary active buttonEt\" checked> <input type=\"radio\" name=\"options\" autocomplete=\"off\"> {{ 'requetes.et' |trans }}</label> <label class=\"btn btn-secondary buttonOu\"> <input type=\"radio\" name=\"options\" autocomplete=\"off\"> {{ 'requetes.ou' |trans }}</label></div> </div> <br />";
-    var formulaire_critere = ajoutBox1.concat(buttonAndOr); // Variable qui prend  le formulaire.
+    var formulaire_critere = ajoutBox1.concat(buttonAndOr); // Variable qui prend le formulaire.
 
     function creerTableAfficherEtCritere() {
         var reqSaveCorps = '{{ reqSaveCorps}}';
         if(reqSaveCorps == "" ){
             //Table afficher
-            $('#type_donnee').append("<br /> <div class=\"div_type_donnee\"> <select name=\"select_type_donnee\" class=\"select_type_donnee\"> <option value=\"\" selected=\"true\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </div> <br />");
+            $('#type_donnee').append("<br /> <div class=\"div_type_donnee\"> <form class=\"form_afficher\"> <select name=\"select_type_donnee\" class=\"select_type_donnee\"> <option value=\"\" selected=\"selected\" disabled=\"disabled\"> {{ 'requetes.selection_vide' | trans }} </option> <option value=\"attestation\"> {{ 'attestation.name' | trans }} </option> <option value=\"agent\"> {{ 'requetes.agent_name' | trans }} </option> <option value=\"datation\"> {{ 'source.sections.datation' | trans }} </option> <option value=\"element\"> {{ 'element.name' | trans }} </option> <option value=\"localisation\"> {{ 'source.sections.localisation' | trans }} </option> <option value=\"source\"> {{ 'source.name' | trans }} </option> </select> </form> </div> <br />");
             //Table critères
             $('#liste_critere').append(formulaire_critere);
         }
@@ -117,11 +113,13 @@ Je n'ai pas pu invoquer le block twig dans le js*/
     }
 
     function secondeBox(currentElement) { // Pour le onchange de la première box
-        var valeurSelect = $(currentElement).children("option:selected").val()
+        var valeurSelect = $(currentElement).children("option:selected").val();
+        $(currentElement).find(`[selected="selected"]`).removeAttr("selected");//Je chope celui qui à l'attribut "selected" et je le vire (Pour l'enregistrement de requêtes)
+        $(currentElement).children("option:selected").attr("selected","selected");
         var box2 = $(currentElement).parent().next().children();
         var box3 = $(box2).parent().next().children(); // On doit aussi vider la 3ème box + la mettre en hidden
         $(box2).empty(); // Il faut vider le HTML de la seconde box sinon ça ajoute
-        box3.css("visibility", "hidden"); // On le chache, car il doit obligatoirement saisir la seconde box avant de pouvoir toucher à la 3ème
+        box3.css("visibility", "hidden"); // On le cache, car il doit obligatoirement saisir la seconde box avant de pouvoir toucher à la 3ème
         var box4 = $(box3).parent().next(); // On doit aussi vider la 4ème box (Input text, liste ou input number)
         $(box4).empty();
         remplirSecondeBox(valeurSelect, box2);
@@ -129,7 +127,7 @@ Je n'ai pas pu invoquer le block twig dans le js*/
     }
 
     function remplirSecondeBox(valeur, box) { // Afficher les <option> par rapport à la première box, sur la seconde box
-        $(box).append("<option value=\"\" selected=\"true\" disabled=\"disabled\">-- Please Select --</option>");
+        $(box).append("<option value=\"\" selected=\"selected\" disabled=\"disabled\">{{'requetes.selection_vide' |trans}}</option>");
         $.each(tabObjets, function (j, obj) { // On parcourt le tableau JSON
             if (j == valeur) { // On vérifie que ça corresponde bien à ce qu'il y a dans la box 1
                 for (var i = 0; i < obj.length; i++) { // Boucle for pour afficher tous les objets
@@ -141,17 +139,22 @@ Je n'ai pas pu invoquer le block twig dans le js*/
         return;
     }
 
+    var valeurTabObjet =""; //Le nom d'un des objet de tabObjet. Variable utilisée dans troisiemeBox et remplirQuatriemeBox
+    var iValeurTabeObjet ="";//L'objet i de type tabObjets['valeur']['i']
+
     function troisiemeBox(currentElement) { // Pour le onchange de la seconde box
-        var valeur = $(currentElement).children("option:selected").val(); // le i de tab['valeur'][i]
-        var i = $(currentElement).children("option:selected").attr('label'); // le valeur
+        valeurTabObjet = $(currentElement).children("option:selected").val(); // le valeur
+        iValeurTabeObjet = $(currentElement).children("option:selected").attr('label'); // le i de tabObjets['valeur'][i]
         var box3 = $(currentElement).parent().next().children();
+        var box4 = $(box3).parent().next(); // On doit aussi vider la 4ème box (Input text, liste ou input number)
+        $(box4).empty();
         $(box3).empty(); // Il faut vider le HTML de la seconde box sinon ça ajoute
-        remplirTroisiemeBox(tabObjets[valeur][i].type, box3);
+        remplirTroisiemeBox(tabObjets[valeurTabObjet][iValeurTabeObjet].type, box3);
         return;
     }
 
     function remplirTroisiemeBox(valeur, box) {
-        $(box).append("<option value=\"\" selected=\"true\" disabled=\"disabled\">-- Please Select --</option>");
+        $(box).append("<option value=\"\" selected=\"selected\" disabled=\"disabled\">{{ 'requetes.selection_vide' | trans }}</option>");
         $.each(tabChoix, function (j, obj) { // On parcourt le tableau JSON
             if (j == valeur) { // On vérifie que ça corresponde bien à ce qu'il y a dans la box 1
                 for (var i = 0; i < obj.length; i++) { // Boucle for pour afficher tous les objets
@@ -163,27 +166,53 @@ Je n'ai pas pu invoquer le block twig dans le js*/
         return;
     }
 
-    function quatriemeBox(currentElement) {
-        var valeur = $(currentElement).children("option:selected").val();
-        var idTabChoix = $(currentElement).children("option:selected").attr('label');
-        var box4 = $(currentElement).parent().next();
+    function quatriemeBox(currentElement) {// Pour le onchange de la troisieme box
+        var valeur = $(currentElement).children("option:selected").val();//Le val correspond à la valeur de l'élément (String, number, liste...)
+        var idTabChoix = $(currentElement).children("option:selected").attr('label');//L'attribut label, qui contient l'id dans le tabChoix
+        var box4 = $(currentElement).parent().next();//On se place sur le span
         remplirQuatriemeBox(valeur, idTabChoix, box4);
     }
 
     function remplirQuatriemeBox(valeur, id, box) {
-        $(box).empty();
+        $(box).empty();//On le vide avant d'ajouter quoi que ce soit
         switch (valeur) {
+
             case "1":
                 if (id != 7) { // estNul
                     $(box).append("<input type=\"text\" required class=\"text_input input_req\">"); // Text input classique (String)
                 }
                 break;
+
             case "2":
                 $(box).append("<select name=\"select_box4\" class=\"select_box4\"> </select>"); // On ajout le select
-                var selectBox = $(box).children();// Le select_box4
+                var selectBox4 = $(box).children();// Le select_box4
+                $(selectBox4).append("<option value=\"\" selected=\"true\" disabled=\"disabled\">{{ 'requetes.selection_vide' | trans }}</option>");
 
-                // Ajouter les <option> avec de l'AJAAAAAAAAAAAAAX
+                var nomBDD = tabObjets[valeurTabObjet][iValeurTabeObjet].nomBDD;
+                var nomTable = tabObjets[valeurTabObjet][iValeurTabeObjet].table;
+                
+                //Ajax
+                var personnage = "Homer";
+                $.ajax({
+                    url:'{{path('requetes_list_comboBox')}}',
+                    type: "POST",
+                    data: {
+                        "nomBDD": nomBDD,
+                        "nomTable": nomTable
+                    },
+                    success: function (rows)
+                    {
+                        $.each(rows, function (key, row) {
+                           $(selectBox4).append("<option>" + row.nom + "</option>");//On met les options avec le nom 
+                        });
+                    },
+                    error: function (err)
+                    {
+                        console.log("An error ocurred while loading data ...");
+                    }
+                })
                 break;
+
             case "3":
                 if (id != 13) { // estNul
                     $(box).append("<input required id=\"number_input\" class=\"number_input input_req\">"); // Text input avec uniquement des nombres (int)
@@ -227,61 +256,62 @@ Je n'ai pas pu invoquer le block twig dans le js*/
     var tabChoix = {
         0: [
             {
-                "nom": "Est vrai",
+                "nom": "{{ 'requetes.tab_choix.est_vrai' |trans }}",
                 "id": 0
             }, {
-                "nom": "Est faux",
+                "nom": "{{ 'requetes.tab_choix.est_faux' |trans }}",
                 "id": 1
             }, {
-                "nom": "Est nul",
+                "nom": "{{ 'requetes.tab_choix.est_nul' |trans }}",
                 "id": 2
             }
         ],
         1: [
             {
-                "nom": "Contient",
+                "nom": "{{ 'requetes.tab_choix.contient' |trans }}",
                 "id": 3
             }, {
-                "nom": "Ne contient pas",
+                "nom": "{{ 'requetes.tab_choix.contient_pas' |trans }}",
                 "id": 4
             }, {
-                "nom": "Commence par",
+                "nom": "{{ 'requetes.tab_choix.commence_par' |trans }}",
                 "id": 5
             }, {
-                "nom": "Finit par",
+                "nom": "{{ 'requetes.tab_choix.finit_par' |trans }}",
                 "id": 6
             }, {
-                "nom": "Est vide",
+                "nom": "{{ 'requetes.tab_choix.est_vide' |trans }}",
                 "id": 7
             },
         ],
         2: [
             {
-                "nom": "Est égal à",
+                "nom": "{{ 'requetes.tab_choix.est_egal' |trans }}",
                 "id": 8
             }, {
-                "nom": "Est différent de",
+                "nom": "{{ 'requetes.tab_choix.est_different' |trans }}",
                 "id": 9
             }
         ],
         3: [
             {
-                "nom": "Plus grand que",
+                "nom": "{{ 'requetes.tab_choix.plus_grand' |trans }}",
                 "id": 10
             }, {
-                "nom": "Plus petit que",
+                "nom": "{{ 'requetes.tab_choix.plus_petit' |trans }}",
                 "id": 11
             }, {
-                "nom": "Égal à",
+                "nom": "{{ 'requetes.tab_choix.egal_a' |trans }}",
                 "id": 12
             }, {
-                "nom": "Est nul",
+                "nom": "{{ 'requetes.tab_choix.est_nul' |trans }}",
                 "id": 13
             }
         ]
     }
 
     // Type : Booléen(0), String/Text(1), Liste(2), Number(3),Lien existe(4) -> Si le lien existe entre telle et telle table, en soi juste une jointure
+    //Tableau pour le box2
     var tabObjets = {
         "attestation": [
             {
@@ -312,27 +342,27 @@ Je n'ai pas pu invoquer le block twig dans le js*/
             }, {
                 "nom": "{{ 'attestation.fields.etat_fiche' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{ 'requetes.nomBDD' | trans }}",
                 "table": "etat_fiche"
             }, {
                 "nom": "{{ 'attestation.fields.categorie_occasion' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "categorie_occasion"
             }, {
                 "nom": "{{ 'attestation.fields.occasion' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "occasion"
             }, {
                 "nom": "{{ 'attestation.fields.categorie_materiel' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "categorie_materiel"
             }, {
                 "nom": "{{ 'attestation.fields.materiel' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "materiel"
             }
         ],
@@ -356,27 +386,27 @@ Je n'ai pas pu invoquer le block twig dans le js*/
             }, {
                 "nom": "{{ 'agent.fields.agentivite' |trans }}",
                 "type": 1,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "agentivite"
             }, {
                 "nom": "{{ 'agent.fields.nature' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "nature"
             }, {
                 "nom": "{{ 'agent.fields.genre' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "genre"
             }, {
                 "nom": "{{ 'agent.fields.statut_affiche' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "statut_affiche"
             }, {
                 "nom": "{{ 'agent.fields.activite' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "activite_agent"
             }
         ],
@@ -390,12 +420,12 @@ Je n'ai pas pu invoquer le block twig dans le js*/
             }, {
                 "nom": "{{ 'localisation.fields.nom_ville' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_ville",
+                "nomBDD": "nomVille",
                 "table": "localisation"
             }, {
                 "nom": "{{ 'localisation.fields.nom_site' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_site",
+                "nomBDD": "nomSite",
                 "table": "localisation"
             }, {
                 "nom": "{{ 'generic.fields.commentaire_fr' |trans }}",
@@ -410,27 +440,27 @@ Je n'ai pas pu invoquer le block twig dans le js*/
             }, {
                 "nom": "{{ 'localisation.fields.entite_politique' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "entite_politique"
             }, {
                 "nom": "{{ 'localisation.fields.grande_region' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "grande_region"
             }, {
                 "nom": "{{ 'localisation.fields.sous_region' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "sous_region"
             }, {
                 "nom": "{{ 'localisation.fields.topographie' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "q_topographie"
             }, {
                 "nom": "{{ 'localisation.fields.fonction' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "q_fonction"
             },
         ],
@@ -454,7 +484,7 @@ Je n'ai pas pu invoquer le block twig dans le js*/
             }, {
                 "nom": "{{ 'element.fields.etat_morphologique' |trans }}",
                 "type": 2,
-                "nomBDD": "commentaire_en",
+                "nomBDD": "etatMorphologique",
                 "table": "contient_element"
             }, {
                 "nom": "{{ 'element.fields.beta_code' |trans }}",
@@ -469,12 +499,12 @@ Je n'ai pas pu invoquer le block twig dans le js*/
             }, {
                 "nom": "{{ 'element.fields.genre' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "genre_element"
             }, {
                 "nom": "{{ 'element.fields.nombre' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "nombre_element"
             }, {
                 "nom": "{{ 'element.fields.reference_element' |trans }}",
@@ -488,47 +518,47 @@ Je n'ai pas pu invoquer le block twig dans le js*/
             {
                 "nom": "{{ 'source.fields.categorie_source' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "categorie_source"
             }, {
                 "nom": "{{ 'source.fields.type_source' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "type_source"
             }, {
                 "nom": "{{ 'source.fields.langues' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "langue"
             }, {
                 "nom": "{{ 'source.fields.titre' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "titre"
             }, {
                 "nom": "{{ 'source.fields.auteurs' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "auteur"
             }, {
                 "nom": "{{ 'source.fields.categorie_materiau' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "categorie_materiau"
             }, {
                 "nom": "{{ 'source.fields.materiau' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "materiau"
             }, {
                 "nom": "{{ 'source.fields.support' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "type_support"
             }, {
                 "nom": "{{ 'source.fields.categorie_support' |trans }}",
                 "type": 2,
-                "nomBDD": "nom_fr",
+                "nomBDD": "{{'requetes.nomBDD' |trans}}",
                 "table": "categorie_support"
             }, {
                 "nom": "{{ 'source.fields.iconographie' |trans }}",
