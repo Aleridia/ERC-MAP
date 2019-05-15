@@ -95,13 +95,14 @@ class RequetesController extends AbstractController
             $em->persist($reqSave);
             $em->flush();
 
-            $reqSaveCorps =  json_encode($reqSaveCorps); //Encodage en json car sinon je ne peux pas envoyer de variable twig à la vue
+            $reqSaveCorps = json_encode($reqSaveCorps, JSON_HEX_APOS); //Encodage en json car sinon je ne peux pas envoyer de variable twig à la vue
+            //Il faut laisser le APOS, car ça encode les apostrophes. Si on l'enlève ça casse tout
         }
 
         return $this->render('requetes/index.html.twig', [
             'controller_name' => 'RequetesController',
             'reqSaveCorps' => $reqSaveCorps,
-            'form' => $form->createView(),
+            'formEnrReq' => $form->createView(),
             'breadcrumbs'   => [
                 ['label' => 'nav.home', 'url' => $this->generateUrl('home')],
                 ['label' => 'requetes.list']
@@ -116,7 +117,6 @@ class RequetesController extends AbstractController
      */
     public function comboBox(Request $request) //Fonction pour les listes dynamiques
     {
-        //Passer par un switch pour les Entity::class
         if ($request->isXmlHttpRequest()) {
             $nomBDD = $request->request->get('nomBDD');
             $nomTable = $request->request->get('nomTable');
@@ -133,6 +133,29 @@ class RequetesController extends AbstractController
         }
     }
 
+    
+    /**
+     * Page queries
+     *
+     * @Route("/requetes/chargerReq", name="requetes_charger_requete", options={"expose"=true})
+     */
+    public function chargerRequete(Request $request){
+        if ($request->isXmlHttpRequest()) {
+            $idReq = $request->request->get('idReq');
+
+            //Requête DQL portant sur l'id
+            $repo = $this->getDoctrine()->getManager()->getRepository(Requetes::class);
+            $corpsReq = $repo->createQueryBuilder("e")
+                ->where("e.id = ?1")
+                ->setParameter(1, $idReq)
+                ->getQuery()
+                ->getResult();
+
+                $corpsReq= $corpsReq[0]->getReqCorps();
+                return new JsonResponse($corpsReq);
+        }
+    }
+    
     private function _traiterRetour($rows, $reponseArray,$nomBDD){//Pour ceux à qui la méthode getNom() ne peut s'appliquer
         switch($nomBDD){
             case "nomVille":
@@ -163,7 +186,6 @@ class RequetesController extends AbstractController
             
             case "etatMorphologique":
                 foreach ($rows as $row) {
-
                         $responseArray[] = array(
                             "nom" => $row->getEtatMorphologique()
                         );

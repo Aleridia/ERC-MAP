@@ -364,7 +364,7 @@ requetes:
     et: "Et"
     ou: "Ou"
     nomBDD: "fr"
-    tabChoix:
+    tab_choix:
         est_vrai: "Est vrai"
         est_faux: "Est faux"
         est_nul: "Est nul"

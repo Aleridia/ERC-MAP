@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12 table-buttons">
             <button
-                class="btn btn-warning clear-filter-button" onclick="clearFilters()" type="button">
+                class="btn btn-warning clear-filter-button" onclick="clearFilters(1)" type="button">
                 {#Bouton pour réinitialiser les filtres #}
                 {{ 'generic.clear_filters'|trans }}
             </button>
@@ -15,12 +15,29 @@
     </div>
 {% endblock %}
 
+{% block buttonBarChampAffiche %}
+    <div class="row">
+        <div class="col-12 table-buttons">
+            <button
+                class="btn btn-warning clear-filter-button" onclick="clearFilters(2)" type="button">
+                {#Bouton pour réinitialiser les filtres #}
+                {{ 'generic.clear_filters'|trans }}
+            </button>
+            <button class="btn btn-primary" onclick="ajouterChampAffiche()" type="button">
+                {{ 'generic.add' |trans }}</button>
+            {# Ajouter une requête #}
+            <br/>
+            <br/>
+        </div>
+    </div>
+{% endblock %}
+
 {% block buttonGeneric %}
     <div class="row">
         <div class="col-12 table-buttons">
-            <button class="btn btn-info" onclick="sauvegarderRequete()" type="button">{{ 'generic.save' |trans }}</button>
+            <button class="btn btn-info" type="button" data-toggle="modal" data-target="#exampleModal" >{{ 'generic.save' |trans }}</button>
             {#Bouton pour sauvegarder la requête #}
-            <button class="btn btn-success" type="button">
+            <button class="btn btn-success" type="button" onclick="executerRequete()">
                 {{ 'generic.search' |trans }}
             </button>
             {#Bouton pour lancer la requête #}
